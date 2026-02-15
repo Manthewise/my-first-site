@@ -24,7 +24,7 @@ jobs:
 
       - name: SSH into EC2 and deploy
 
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
 
         with:
 
