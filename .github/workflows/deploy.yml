@@ -1,45 +1,26 @@
-name: Deploy to EC2
-
-
+name: Deploy
 
 on:
-
   push:
-
     branches:
-
       - master
 
-
-
 jobs:
-
   deploy:
-
     runs-on: ubuntu-latest
 
-
-
     steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: SSH into EC2 and deploy
+      - name: Test SSH Connection
+        run: |
+          ssh deploy@${{ secrets.EC2_HOST }} "echo Connected"
 
-        uses: appleboy/ssh-action@v1.0.3
-
-        with:
-
-          host: ${{ secrets.EC2_HOST }}
-
-          username: deploy
-
-          key: ${{ secrets.EC2_SSH_KEY }}
-
-          script: |
-
-            cd /home/deploy/my-first-site
-
-            git pull origin master
-
-            sudo cp -r * /var/www/html/
-
-            sudo systemctl reload nginx
+      - name: Run Deploy Script
+        run: |
+          ssh deploy@${{ secrets.EC2_HOST }} "~/deploy.sh"
