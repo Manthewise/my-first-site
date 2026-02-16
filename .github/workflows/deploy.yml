@@ -2,9 +2,9 @@ name: Deploy to EC2
 
 on:
   push:
-      branches: [ master ]  # Change to your branch, e.g., master
+    branches: [ master ]  # Change to your branch, e.g., master
 
-          jobs:
+jobs: 
             deploy:
                 runs-on: ubuntu-latest
                     
