@@ -1,27 +1,27 @@
 name: Deploy to EC2
 
 on:
-    push:
-          branches: [ master ]  # Change to your branch, e.g., master
+  push:
+      branches: [ master ]  # Change to your branch, e.g., master
 
           jobs:
-              deploy:
-                    runs-on: ubuntu-latest
+            deploy:
+                runs-on: ubuntu-latest
+                    
+                steps:
+                  - name: Checkout code
+                    uses: actions/checkout@v4
 
-                          steps:
-                                  - name: Checkout code
-                                            uses: actions/checkout@v4
-
-                                                    - name: SSH into EC2 and Deploy
-                                                              uses: appleboy/ssh-action@v1.0.3
-                                                                        with:
-                                                                                    host: ${{ secrets.EC2_HOST }}
-                                                                                                username: ${{ secrets.EC2_USER }}
-                                                                                                            key: ${{ secrets.EC2_SSH_KEY }}
-                                                                                                                        script: |
-                                                                                                                                      cd /home/deploy/my-first-site  # e.g., /home/deploy-user/my-repo
-                                                                                                                                                  git pull origin master  # Pull latest changes (match your branch)
-                                                                                                                                                              sudo cp -r . /var/www/html/index.html  # Copy everything to Nginx folder (customize paths; -r for recursive)
+                  - name: SSH into EC2 and Deploy
+                    uses: appleboy/ssh-action@v1.0.3
+                    with:
+                      host: ${{ secrets.EC2_HOST }}
+                      username: ${{ secrets.EC2_USER }}
+                      key: ${{ secrets.EC2_SSH_KEY }}
+                      script: |
+                                cd /home/deploy/my-first-site  # e.g., /home/deploy-user/my-repo
+                                git pull origin master  # Pull latest changes (match your branch)
+                                sudo cp -r . /var/www/html/index.html  # Copy everything to Nginx folder (customize paths; -r for recursive)
                                                                                                                                                                           # Optional: Fix permissions if needed
                                                                                                                                                                           #             sudo chown -R www-data:www-data /var/www/my-site/  # Assuming Nginx runs as www-data
                                                                                                                                                                           #                         # Optional: Restart Nginx to apply changes (if static site or needs reload)
